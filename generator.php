@@ -23,7 +23,6 @@ if ($f === false) {
 
 $begin = new DateTime('01-01-1950');
 $end = new DateTime('31-12-2022');
-$end = $end->modify('+1 day');
 
 $interval = new DateInterval('P1D');
 $daterange = new DatePeriod($begin, $interval, $end);
