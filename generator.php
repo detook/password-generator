@@ -21,6 +21,21 @@ if ($f === false) {
     exit(1);
 }
 
+$begin = new DateTime('01-01-1950');
+$end = new DateTime('31-12-2022');
+
+$interval = new DateInterval('P1D');
+$daterange = new DatePeriod($begin, $interval, $end);
+
+$dateFormats = ["mdY", "mYd", "dmY", "dYm", "Ymd", "Ydm"];
+
+foreach ($daterange as $date) {
+    foreach ($dateFormats as $dateFormat) {
+        fwrite($f, $date->format($dateFormat).$basePassword."\n");
+        fwrite($f, $basePassword.$date->format($dateFormat)."\n");
+    }
+}
+
 //09031986
 // Append
 $number = 0;
