@@ -53,23 +53,39 @@ while ($number < 2023) {
     $number++;
 }
 
-//l => 1
-//o => 0
-$countChars = count_chars($basePassword);
-$chars = [
-    'o' => '0',
-    'O' => '0',
-    'l' => '1',
-];
-foreach ($chars as $char => $replacement) {
-    if ($countChars[ord($char)] === 0) {
-        continue;
+$words = [];
+$iteration = 0;
+while (($newWord = replace($basePassword, $iteration)) !== null) {
+    $words[] = $newWord;
+    $iteration++;
+}
+foreach ($words as $word){
+    fwrite($f, $word."\n");
+}
+
+function replace(string $basePassword, int $skipIteration = 0)
+{
+    $replacements = ['o' => '0', 'k' => 'K'];
+    $len = strlen($basePassword);
+    $newWord = '';
+    $iteration = 0;
+    for ($i = 0; $i < $len; $i++) {
+        $wordLetter = $basePassword[$i];
+        foreach ($replacements as $letter => $newLetter) {
+            if ($basePassword[$i] === $letter) {
+                if ($iteration >= $skipIteration) {
+                    $newWord[$i] = $newLetter;
+                    $remainingLetters = substr($basePassword, $i + 1);
+
+                    return $newWord.$remainingLetters;
+                }
+                $iteration++;
+            }
+        }
+        $newWord[$i] = $wordLetter;
     }
 
-    for ($i = 0; $i < $countChars[ord($char)]; $i++) {
-        $password = preg_replace('/'.preg_quote($char, '/').'/', $replacement, $basePassword, $i + 1);
-        fwrite($f, $password."\n");
-    }
+    return null;
 }
 
 fclose($f);
